@@ -57,7 +57,7 @@ public class Board {
         if (direction.equals("up")) {
 //            if (includes(boardArray[0], 0)) {
                 for (int col = 0; col < 4; col++) {
-                    int[] newCol = shiftLeft(getColumn(col), false);
+                    int[] newCol = shiftLeft(getColumn(col), true);
                     System.out.println(col);
                     for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
                     for (int row = 3; row >= 0; row--) {
@@ -75,7 +75,7 @@ public class Board {
         } else if (direction.equals("down")) {
             if (includes(boardArray[3], 0)) {
                 for (int col = 0; col < 4; col++) {
-                    int[] newCol = shiftLeft(getColumn(col), true);
+                    int[] newCol = shiftLeft(getColumn(col), false);
                     for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
                     for (int row = 0; row < 4; row++) {
                         int val = boardArray[row][col];
@@ -92,7 +92,7 @@ public class Board {
         } else if (direction.equals("left")) {
             if (includes(getColumn(0), 0)) {
                 for (int row = 0; row < 4; row++) {
-                    boardArray[row] = shiftLeft(boardArray[row], false);
+                    boardArray[row] = shiftLeft(boardArray[row], true);
                     ;
                     for (int col = 0; col < 4; col++) {
                         int val = boardArray[row][col];
@@ -109,7 +109,7 @@ public class Board {
         } else {
             if (includes(getColumn(3), 0)) {
                 for (int row = 0; row < 4; row++) {
-                    boardArray[row] = shiftLeft(boardArray[row], true);
+                    boardArray[row] = shiftLeft(boardArray[row], false);
                     for (int col = 3; col >= 0; col--) {
                         int val = boardArray[row][col];
                         if (col < 3 && boardArray[row][col + 1] == val) {
