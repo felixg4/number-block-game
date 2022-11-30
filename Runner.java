@@ -7,14 +7,14 @@ public class Runner {
         String[] acceptableInputs = {"up", "down", "left", "right"};
         Board gameBoard = new Board();
         do {
-            System.out.print("enter a direction(\"up\"/\"down\"/\"left\"/\"right\", or \"quit\" to quit)");
-            userInput = scan.nextLine();
-            boolean goodArgs = true;
+            System.out.print("enter a direction(\"up\"/\"down\"/\"left\"/\"right\", or \"quit\" to quit) ");
+            userInput = scan.nextLine().toLowerCase();
+            boolean goodArgs = false;
             for (int i = 0; i < acceptableInputs.length; i++) {
-
+                if (!goodArgs && acceptableInputs[i].equals(userInput)) goodArgs = true;
             }
             if (!goodArgs) System.out.println("that's not a valid move!");
-            else;
+            else gameBoard.move(userInput);
         } while (!userInput.equals("quit"));
         scan.close();
     }
