@@ -44,10 +44,7 @@ public class Board {
 		int[] emptySpots = new int[16];
 		int j = 0;
 		for (int i = 0; i < 16; i++) {
-			if (getSquare(i) < 2) {
-				emptySpots[j] = i;
-				j++;
-			}
+			if (getSquare(i) < 2) emptySpots[j++] = i;
 		}
 		if (j == 0) {
 			System.out.println("you lost! the biggest number you created was " + longest);
@@ -70,10 +67,10 @@ public class Board {
                             return;
                         }
                     }
-//                }
-            }
+                }
+//            }
         } else if (direction.equals("down")) {
-            if (includes(boardArray[3], 0)) {
+//            if (includes(boardArray[3], 0)) {
                 for (int col = 0; col < 4; col++) {
                     int[] newCol = shiftLeft(getColumn(col), false);
                     for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
@@ -88,9 +85,9 @@ public class Board {
                         }
                     }
                 }
-            }
+//            }
         } else if (direction.equals("left")) {
-            if (includes(getColumn(0), 0)) {
+//            if (includes(getColumn(0), 0)) {
                 for (int row = 0; row < 4; row++) {
                     boardArray[row] = shiftLeft(boardArray[row], true);
                     ;
@@ -105,9 +102,9 @@ public class Board {
                         }
                     }
                 }
-            }
+//            }
         } else {
-            if (includes(getColumn(3), 0)) {
+//            if (includes(getColumn(3), 0)) {
                 for (int row = 0; row < 4; row++) {
                     boardArray[row] = shiftLeft(boardArray[row], false);
                     for (int col = 3; col >= 0; col--) {
@@ -121,7 +118,7 @@ public class Board {
                         }
                     }
                 }
-            }
+//            }
         }
         System.out.println(this);
     }
