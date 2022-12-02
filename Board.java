@@ -9,8 +9,13 @@ public class Board {
                 setSquare(randLoc, (int) Math.pow(2, (int) Math.random() * 2) + 1);
             } while (getSquare(randLoc) < 2);
         }
-        System.out.print(toString());
+        System.out.print(this);
     }
+    public Board(int startingNum1, int startingNum2, int startingNum1Loc, int startingNum2Loc) {
+        setSquare(startingNum1Loc, startingNum2Loc);
+        setSquare(startingNum2Loc, startingNum2);
+    }
+    // make a 0 parameter method
     private int getSquare(int loc) {
         return boardArray[loc / 4][loc % 4];
     }
@@ -24,15 +29,15 @@ public class Board {
         String res = "";
 		int longestLen = (int) Math.ceil(Math.log10(longest));
         for (int row = 0; row < 4; row++) {
-            res += "|";
+            res += "| ";
             for (int col = 0; col < 4; col++) {
                 int val = boardArray[row][col];
                 int valLength = (int) Math.ceil(Math.log10(val));
                 int extraSpacing = longestLen - valLength;
-                for (int i = 0; i < extraSpacing / 2 + 1; i++) res += " ";
+                for (int i = 0; i < extraSpacing / 2 + extraSpacing % 2; i++) res += " ";
                 res += val;
                 for (int i = 0; i < extraSpacing / 2 + extraSpacing % 2; i++) res += " ";
-                res += " |";
+                res += " | ";
             }
             res += "\n";
             for (int i = 0; i < 4*(longestLen + 4); i++) res += "-";
@@ -46,6 +51,13 @@ public class Board {
 		for (int i = 0; i < 16; i++) {
 			if (getSquare(i) < 2) emptySpots[j++] = i;
 		}
+        // fix this logic
+        boolean canMove = false;
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 4; col++) {
+                // can a block be combined with a block next to it?
+            }
+        }
 		if (j == 0) {
 			System.out.println("you lost! the biggest number you created was " + longest);
 			return;
@@ -55,9 +67,8 @@ public class Board {
             for (int col = 0; col < 4; col++) {
                 int[] newCol = shiftLeft(getColumn(col), true);
                 for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
-                for (int row = 3; row >= 0; row--) {
-                    int val = boardArray[row][col];
-                    if (row > 0 && boardArray[row - 1][col] == val) {
+                for (int row = 3; row > 0; row--) {
+                    if (boardArray[row][col] > 0 && boardArray[row - 1][col] == boardArray[row][col]) {
                         boardArray[row][col] = 0;
                         boardArray[row - 1][col] *= 2;
                         if (boardArray[row - 1][col] > longest) longest = boardArray[row - 1][col];
@@ -65,14 +76,15 @@ public class Board {
                         return;
                     }
                 }
+                newCol = shiftLeft(getColumn(col), true);
+                for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
             }
         } else if (direction.equals("down")) {
             for (int col = 0; col < 4; col++) {
                 int[] newCol = shiftLeft(getColumn(col), false);
                 for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
-                for (int row = 0; row < 4; row++) {
-                    int val = boardArray[row][col];
-                    if (row < 3 && boardArray[row + 1][col] == val) {
+                for (int row = 0; row < 3; row++) {
+                    if (boardArray[row][col] > 0 && boardArray[row + 1][col] == boardArray[row][col]) {
                         boardArray[row][col] = 0;
                         boardArray[row + 1][col] *= 2;
                         if (boardArray[row + 1][col] > longest) longest = boardArray[row + 1][col];
@@ -80,14 +92,15 @@ public class Board {
                         return;
                     }
                 }
+                newCol = shiftLeft(getColumn(col), false);
+                for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
             }
         } else if (direction.equals("left")) {
             for (int row = 0; row < 4; row++) {
                 boardArray[row] = shiftLeft(boardArray[row], true);
-                ;
-                for (int col = 0; col < 4; col++) {
+                for (int col = 1; col < 4; col++) {
                     int val = boardArray[row][col];
-                    if (col > 0 && boardArray[row][col - 1] == val) {
+                    if ( boardArray[row][col] > 0 && boardArray[row][col - 1] == val) {
                         boardArray[row][col] = 0;
                         boardArray[row][col - 1] *= 2;
                         if (boardArray[row][col - 1] > longest) longest = boardArray[row][col - 1];
@@ -95,13 +108,14 @@ public class Board {
                         return;
                     }
                 }
+                boardArray[row] = shiftLeft(boardArray[row], true);
             }
         } else {
             for (int row = 0; row < 4; row++) {
                 boardArray[row] = shiftLeft(boardArray[row], false);
-                for (int col = 3; col >= 0; col--) {
+                for (int col = 2; col >= 0; col--) {
                     int val = boardArray[row][col];
-                    if (col < 3 && boardArray[row][col + 1] == val) {
+                    if (boardArray[row][col] > 0 && boardArray[row][col + 1] == val) {
                         boardArray[row][col] = 0;
                         boardArray[row][col + 1] *= 2;
                         if (boardArray[row][col + 1] > longest) longest = boardArray[row][col + 1];
@@ -109,6 +123,7 @@ public class Board {
                         return;
                     }
                 }
+                boardArray[row] = shiftLeft(boardArray[row], false);
             }
         }
         System.out.println(this);
@@ -133,21 +148,5 @@ public class Board {
         int[] newArr = new int[4];
         for (int i = 0; i < 4; i++) newArr[i] = arr[3 - i];
         return newArr;
-    }
-    private void moveHelper(int rowModifier, int columnModifier, boolean rowOrColumn) {
-        for (int row = 0; row < 4; row++) {
-            int[] modArray = rowOrColumn ? boardArray[row] : getColumn(row);
-            modArray = shiftLeft(modArray, rowModifier == -1 || columnModifier == -1);
-            for (int col = 3; col >= 0; col--) {
-                int val = boardArray[row][col];
-                if (col < 3 && boardArray[row + rowModifier][col + columnModifier] == val) {
-                    boardArray[row][col] = 0;
-                    boardArray[row + rowModifier][col + columnModifier] *= 2;
-                    if (boardArray[row + rowModifier][col + columnModifier] > longest) longest = boardArray[row + rowModifier][col + columnModifier];
-                    System.out.println(this);
-                    return;
-                }
-            }
-        }
     }
 }

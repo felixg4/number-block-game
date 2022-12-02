@@ -2,9 +2,21 @@ import java.util.Scanner;
 public class Runner {
     public static void main(String[] args) {
         System.out.println("welcome to 2048!");
+        /*
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+        IT'S ALL BROKEN
+         */
         Scanner scan = new Scanner(System.in);
         String userInput;
         String[] acceptableInputs = {"up", "down", "left", "right"};
+        // use wasd as well
         Board gameBoard = new Board();
         do {
             System.out.print("enter a direction(\"up\"/\"down\"/\"left\"/\"right\", or \"quit\" to quit) ");
