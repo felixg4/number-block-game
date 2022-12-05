@@ -2,6 +2,7 @@ public class Board {
     private int[][] boardArray = new int[4][4];
     private int[][] prevBoardArray = boardArray;
     private int longest = 1;
+    private boolean lost = false;
     public Board() {
         for (int i = 0; i < (int) (Math.random() * 2) + 1; i++) {
             int randLoc;
@@ -30,27 +31,24 @@ public class Board {
     public String toString() {
         String res = "";
 		int longestLen = (int) Math.ceil(Math.log10(longest)) + 2;
-        /*
-        String[] textcolorCodes = {"\033[38;2;r;g;b",
-            "\033[38;2;119;110;101;48;2;237;224;200;m",
-            "\033[38;2;249;246;242;48;2;242;177;121;m",
-            "\033[38;2;249;246;242;48;2;245;149;99;m",
-            "\033[38;2;249;246;242;48;2;246;124;95;m"
+        String[] textCodes = {
+            "\033[1;38;2;119;110;101;48;2;237;224;200m",
+            "\033[1;38;2;249;246;242;48;2;242;177;121m",
+            "\033[1;38;2;249;246;242;48;2;245;149;99m",
+            "\033[1;38;2;249;246;242;48;2;246;124;95m"
         };
-        String[] bgColorCodes = {"48;2;r;g;bm",
-            ""
-        }
-        */
         for (int row = 0; row < 4; row++) {
             res += "|";
             for (int col = 0; col < 4; col++) {
                 int val = boardArray[row][col];
                 int valLength = (int) Math.max(Math.ceil(Math.log10(val)), 1);
                 int extraSpacing = longestLen - valLength;
+                if (val > 0) res += textCodes[(int) (Math.log10(val)/Math.log10(2) - 1) % textCodes.length];
                 for (int i = 0; i < extraSpacing / 2; i++) res += " ";
-                if (val > 0) res += "\033[0;38;2;255;0;0;48;2;0;0;255m" + val + "\033[0m";
+                if (val > 0) res += val;
                 else res += " ";
                 for (int i = 0; i < extraSpacing / 2 + extraSpacing % 2; i++) res += " ";
+                res += "\033[0m";
                 res += "|";
             }
             res += "\n";
@@ -135,6 +133,7 @@ public class Board {
 		for (int i = 0; i < 16; i++) if (getSquare(i) == 0) emptySpots[j++] = i;
 		if (!canMatch && j == 0) {
 			System.out.println("you lost! the biggest number you created was " + longest);
+            lost = true;
 			return;
 		}
         setSquare(emptySpots[(int) (Math.random() * j)], (int) Math.pow(2, (int) (Math.random() * 2) + 1));
@@ -156,5 +155,8 @@ public class Board {
         int j = 3;
         for (int i = 3; i >= 0; i--) if (arr[i] > 0) newArr[j--] = arr[i];
         return newArr;
+    }
+    public boolean gameLost() {
+        return lost;
     }
 }
