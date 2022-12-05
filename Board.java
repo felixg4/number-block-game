@@ -31,12 +31,15 @@ public class Board {
         String res = "";
 		int longestLen = (int) Math.ceil(Math.log10(longest)) + 2;
         /*
-        String[] colorCodes = {"\033[38;2;119;110;101;48;2;238;228;218;m",
+        String[] textcolorCodes = {"\033[38;2;r;g;b",
             "\033[38;2;119;110;101;48;2;237;224;200;m",
             "\033[38;2;249;246;242;48;2;242;177;121;m",
             "\033[38;2;249;246;242;48;2;245;149;99;m",
             "\033[38;2;249;246;242;48;2;246;124;95;m"
         };
+        String[] bgColorCodes = {"48;2;r;g;bm",
+            ""
+        }
         */
         for (int row = 0; row < 4; row++) {
             res += "|";
@@ -45,13 +48,13 @@ public class Board {
                 int valLength = (int) Math.max(Math.ceil(Math.log10(val)), 1);
                 int extraSpacing = longestLen - valLength;
                 for (int i = 0; i < extraSpacing / 2; i++) res += " ";
-                if (val > 0) res += /*colorCodes[((int) Math.ceil(Math.log10(val)/Math.log10(2)) - 1) % colorCodes.length] +*/ val;
+                if (val > 0) res += "\033[0;38;2;255;0;0;48;2;0;0;255m" + val + "\033[0m";
                 else res += " ";
                 for (int i = 0; i < extraSpacing / 2 + extraSpacing % 2; i++) res += " ";
                 res += "|";
             }
             res += "\n";
-            for (int i = 0; i < 4 * (longestLen +1 ); i++) res += "-";
+            for (int i = 0; i <= 4 * (longestLen + 1); i++) res += "-";
             res += "\n";
         }
         return res;
