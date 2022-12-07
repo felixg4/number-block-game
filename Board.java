@@ -125,14 +125,17 @@ public class Board {
                 int[] newCol = shiftLeft(getColumn(col));
                 // sets each cell in the column of the gameBoard to what it should be after the shift.
                 for (int row = 0; row < 4; row++) boardArray[row][col] = newCol[row];
-                // loops through each row
+                // loops through each row except for the one where there is no block above
                 for (int row = 1; row < 4; row++) {
                     // stores the value the nested for loop has reached
                     int val = boardArray[row][col];
-                    // checks to see if the index will cause an error, then
+                    // checks to see if the cell is empty, then checks whether an adjacent block is equal the current block 
                     if (val > 0 && boardArray[row - 1][col] == val) {
+                        // sets the current block to 0
                         boardArray[row][col] = 0;
+                        // "combines" the blocks by multiplying the value of the above block by 2
                         boardArray[row - 1][col] = val * 2;
+                        // keeps track of the longest number in the board
                         if (val * 2 > longest) longest = val * 2;
                     }
                 }
@@ -179,11 +182,13 @@ public class Board {
                 }
             }
         } else {
+            // 
             boardArray = prevBoardArray;
             System.out.println(this);
             return;
         }
         boolean canMatch = false;
+        // checks if any match is possible in the current game board
         for (int row = 0; row < 4 && !canMatch; row++) {
             for (int col = 0; col < 4 && !canMatch; col++) {
                 if (!canMatch) {
@@ -193,14 +198,17 @@ public class Board {
                 }
             }
         }
+        // creates an array of empty cells
 		int[] emptySpots = new int[16];
         int j = 0;
 		for (int i = 0; i < 16; i++) if (getSquare(i) == 0) emptySpots[j++] = i;
+        // the player loses if there are no empty cells and no matches can be made
 		if (!canMatch && j == 0) {
 			System.out.println("you lost! the biggest number you created was " + longest);
             lost = true;
 			return;
 		}
+        // place a random block in an empty cell
         setSquare(emptySpots[(int) (Math.random() * j)], (int) Math.pow(2, (int) (Math.random() * 2) + 1));
         System.out.println(this);
     }
@@ -212,6 +220,7 @@ public class Board {
      */
     private int[] getColumn(int column) {
         int[] newArr = new int[4];
+        // loops through each row and appends the item in at a given index in each row
         for (int i = 0; i < 4; i++) newArr[i] = boardArray[i][column];
         return newArr;
     }
